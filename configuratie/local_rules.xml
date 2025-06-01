@@ -25,7 +25,7 @@
     </rule>
 </group>
 
-<group name="apache"
+<group name="apache">
     <rule id="30105" level="5">
       <if_sid>30101</if_sid>
       <match>denied by server configuration</match>
