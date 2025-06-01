@@ -15,7 +15,6 @@ We hebben uitgebreid onderzoek gedaan naar SIEM-oplossingen die geschikt zijn vo
 - `configuratie/` - Wazuh configuratiebestanden
   - Agent configuratie
   - Local rules
-  - Custom decoders
   - Overige instellingen
 
 
