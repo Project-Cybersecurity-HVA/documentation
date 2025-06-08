@@ -3,8 +3,9 @@ name: Deploy Docusaurus to GitHub Pages
 on:
   push:
     branches:
-      - main  # Of je hoofdbranch
-
+      - main
+  workflow_dispatch:
+    
 jobs:
   deploy:
     runs-on: ubuntu-latest
