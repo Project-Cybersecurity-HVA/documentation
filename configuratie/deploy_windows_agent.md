@@ -117,8 +117,6 @@ Zorg dat de agent met de manager kan communiceren door deze regels in Windows De
 
 7. Ga naar **Uitgaande regels** → maak dezelfde twee regels aan (UDP 1514 en TCP 1515/443) zodat eventuele outbound-restricties ook worden opgeheven.
 
-
-
 ## 5. De agent starten en controleren
 
 1. **Start de Wazuh-agent (indien nodig)**

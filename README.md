@@ -10,7 +10,7 @@ We hebben uitgebreid onderzoek gedaan naar SIEM-oplossingen die geschikt zijn vo
   - Functioneel Ontwerp
   - Technisch Ontwerp
   - Onderzoeksresultaten
-  - Instalaltie en Configuratie - Aanpassingen op het Technisch Ontwerp
+  - Installatie en Configuratie - Aanpassingen op het Technisch Ontwerp
 - `configuratie/` - Wazuh configuratiebestanden
   - Agent configuratie
   - Local rules
