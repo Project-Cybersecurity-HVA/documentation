@@ -16,5 +16,8 @@ We hebben uitgebreid onderzoek gedaan naar SIEM-oplossingen die geschikt zijn vo
   - Local rules
    - Overige instellingen
 
+## De GitHub page
+
+Voor het deployen van de documentatie is er Docusaurus gebruikt.
 
 
