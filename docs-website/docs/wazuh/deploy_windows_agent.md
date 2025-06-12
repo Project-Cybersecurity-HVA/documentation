@@ -4,7 +4,6 @@ Deze handleiding beschrijft stap voor stap hoe je de Wazuh-agent installeert en 
 
 (Volledige inhoud van het originele bestand volgt hieronder)
 
----
 
 # Installatie en Deploy van de Wazuh Windows-Agent
 
@@ -15,7 +14,8 @@ Deze handleiding beschrijft stap voor stap hoe je de Wazuh-agent installeert en 
 - **Windows-versie**: Windows 10 (Pro/Enterprise) of Windows Server 2016/2019/2022  
 - **Administrator-rechten**: Open PowerShell als Administrator om de MSI te installeren  
 - **PowerShell 3.0 of hoger**: Controleer met:
-  ```powershell
+
+```powershell
   $PSVersionTable.PSVersion
 ```
 

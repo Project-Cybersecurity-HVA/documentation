@@ -1,6 +1,6 @@
 # Windows Agent ossec.conf
 
-Hieronder vind je een voorbeeld van een ossec.conf configuratiebestand voor de Wazuh Windows agent:
+Hieronder vind je het `ossec.conf`-configuratiebestand voor de Wazuh Windows agent:
 
 ```xml
 <!--
