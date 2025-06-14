@@ -2,7 +2,7 @@
 
 Hieronder vind je het `Sysmonconfig.xml`-configuratiebestand voor Sysmon:
 
-
+```xml
 <!-- 
   -  Sysmon Config - Based on Olaf Hartong's sysmon-modular
   -  Updated by Wazuh, Inc.
@@ -2449,3 +2449,4 @@ Hieronder vind je het `Sysmonconfig.xml`-configuratiebestand voor Sysmon:
 </RuleGroup>
 </EventFiltering>
 </Sysmon>
+```
