@@ -1,3 +1,8 @@
+# Sysmonconfig.xml-bestand
+
+Hieronder vind je het `Sysmonconfig.xml`-configuratiebestand voor Sysmon:
+
+
 <!-- 
   -  Sysmon Config - Based on Olaf Hartong's sysmon-modular
   -  Updated by Wazuh, Inc.
