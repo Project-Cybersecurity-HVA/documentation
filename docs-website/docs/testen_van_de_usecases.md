@@ -88,7 +88,7 @@ vaultcmd /listcreds:"Windows Credentials" /all
 ![Wazuh alert credentials attack](/img/usecases/wazuh_alert_credentials_attack_2.png)
 ![Wazuh alert credentials attack](/img/usecases/wazuh_alert_credentials_attack_3.png)
 
-## Usecase Ongewenste Software
+## Usecase Detectie van Malware
 
 Om nu de usecase te testen voer het volgende commando op de powershell van de Windows systeem uitvoeren: 
 
@@ -98,11 +98,11 @@ Set-Content "$env:USERPROFILE\Desktop\eicar.com" 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EI
 
 **Wazuh Alert:**
 
-![Wazuh alert ongewenste software](/img/usecases/wazuh_alert_ongewenste_software.png)
+![Wazuh alert malware](/img/usecases/wazuh_alert_ongewenste_software.png)
 
 
 
-### Usecase Uitschakelen van Windows Defender
+## Usecase Uitschakelen van Windows Defender
 
 Voer het volgende commando uit in Powershell om een `.bat`-bestand aan te maken in de `TEMP`-folder: 
 
@@ -118,8 +118,7 @@ Vervolgens genereert Sysmon een melding in de eventviewer met ID 11:
 ![Wazuh alert uitschakelen Windows Defender](/img/usecases/wazuh_alert_uitschakelen_windows_defender_2.png)
 
 
-
-### Usecase Misbruik van de Windows Task Scheduler 
+## Usecase Misbruik van de Windows Task Scheduler 
 
 Voer het volgende commando uit in Powershell om het taskschd.dll module te laden: 
 
@@ -129,8 +128,74 @@ Vervolgens genereert Sysmon een melding in de eventviewer met ID 7:
 
 **Windows Event_viewer:**
 
-![Wazuh alert uitschakelen Windows Defender](/img/usecases/event_viewer_task_scheduler.png)
+![Wazuh alert uitschakelen Windows Task Scheduler](/img/usecases/event_viewer_task_scheduler.png)
 
 **Wazuh Event_viewer:**
 
-![Wazuh alert uitschakelen Windows Defender](/img/usecases/wazuh_alert_task_scheduler.png)
+![Wazuh alert uitschakelen Windows Task Scheduler](/img/usecases/wazuh_alert_task_scheduler.png)
+
+## Usecase Bruteforce op Windows 11
+
+Vergrendel het Windows apparaat waar de Wazuh agent zich op bevind en voer herhaaldelijk een verkeerd wachtwoord in. Na 3x binnen 2 minuten wordt er een melding gegenereerd
+
+**Windows Event_viewer:**
+
+![Wazuh alert uitschakelen Bruteforce op Windows 11](/img/usecases/event_viewer_brute_force.png)
+
+**Wazuh Event_viewer:**
+
+![Wazuh alert uitschakelen Bruteforce op Windows 11](/img/usecases/wazuh_alert_brute_force.png)
+
+## Usecase Uitschakelen van Windows Firewall
+
+Voer het volgende PowerShell-commando uit: 
+
+`Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False` 
+
+**Wazuh Event_viewer:**
+
+![Wazuh alert uitschakelen Windows Firewall](/img/usecases/wazuh_alert_windows_firewall.png)
+
+## Usecase AD activiteiten scannen (SharpHound)
+
+Voer het volgende PowerShell-commando uit (met Sharphound geïnstalleerd) in de folder van Sharphound: 
+
+`.\SharpHound.exe --CollectionMethods All –Loop`
+
+**Wazuh Event_viewer:**
+
+![Wazuh alert AD activiteiten scannen](/img/usecases/wazuh_alert_AD_Scanning.png)
+
+## Usecase Inlogpoging op Windows 11 buiten werktijden
+
+Log in het Windows endpoint buiten kantoortijden (18:30-08:30)
+
+**Wazuh Event_viewer:**
+
+![Wazuh alert Windows 11 buiten werktijden](/img/usecases/wazuh_alert_buiten_kantoortijden.png)
+
+## Usecase Inlogpoging op Windows 11 vanaf onbekend netwerk
+
+Log in op een Windows client vanaf een 192.168.56.0/24 netwerk (gebruik rdp) 
+
+**Wazuh Event_viewer:**
+
+![Wazuh alert Windows 11 vanaf onbekend netwerk](/img/usecases/wazuh_alert_vcts.png)
+
+## Usecase Password Spraying
+
+Probeer 5x om in te loggen met verkeerde wachtwoorden van zelfde ip address  
+
+**Wazuh Event_viewer:**
+
+![Wazuh alert Password Spray attack](/img/usecases/wazuh_alert_password_spray.png)
+
+## Usecase Verdachte scripting bestanden in `/tmp` of `/gebruikers` folder
+
+Voer het volgende commando uit in Powershell om een .bat bestand aan te maken in de TEMP folder: 
+
+`echo "echo hello" > "$env:TEMP\Hacked_me.bat"` 
+
+**Wazuh Event_viewer:**
+
+![Sysmon alert scripting bestanden in `/tmp` of `/gebruikers` folder](/img/usecases/sysmon_alert_scripting_temp.png)
