@@ -24,6 +24,7 @@ const config = {
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/documentation/',
+  trailingSlash: true, // Add trailing slash to all URLs
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -51,7 +52,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/Project-Cybersecurity-HVA/documentation/tree/main/',
         },
         
         theme: {
@@ -98,7 +99,7 @@ const config = {
           {
             title: 'More',
             items: [
-              { label: 'GitHub', href: 'https://github.com/MWest2020/docs-website' }
+              { label: 'GitHub', href: 'https://github.com/Project-Cybersecurity-HVA/documentation' }
             ]
           }
         ],

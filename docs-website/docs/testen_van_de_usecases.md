@@ -162,7 +162,7 @@ Voer het volgende PowerShell-commando uit (met Sharphound geïnstalleerd) in de 
 
 **Wazuh Event_viewer:**
 
-![Wazuh alert AD activiteiten scannen](/img/usecases/wazuh_alert_AD_Scanning.png)
+![Wazuh alert AD activiteiten scannen](/img/usecases/wazuh_alert_AD_scanning.png)
 
 ## Usecase Inlogpoging op Windows 11 buiten werktijden
 
