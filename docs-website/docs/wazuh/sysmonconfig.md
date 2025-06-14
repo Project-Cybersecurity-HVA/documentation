@@ -1,5 +1,27 @@
 # Sysmonconfig.xml-bestand
 
+Onderstaande stappen zijn nodig voor het installeren en configureren van Sysmon op het Windows 11-endpoint.
+1.	Download Sysmon van de officiële Microsoft Sysinternals website
+2.	Download de Sysmonconfig.xml
+3.	Installeer Sysmon met de configuratie file, voer hiervoor de volgende commando’s uit in PowerShell met beheerrechten:
+
+`.\sysmon64.exe -accepteula -i .\sysmonconfig.xml`
+
+Deze standard-configuratie voldoet aan de usecases in dit ontwerp. 
+4.	Voeg de volgende configuratie toe in het `<ossec_config>` blok aan de configuratie voor de Wazuh agent  `C:\Program Files (x86)\ossec-agent\ossec.conf` om aan te geven waar de Sysmon-logs worden verzameld.
+
+<localfile>
+  <location>Microsoft-Windows-Sysmon/Operational</location>
+  <log_format>eventchannel</log_format>
+</localfile>
+
+5.	Herstart de Wazuh agent om de aanpassingen door te voeren in PowerShell, met beheerrechten. 
+
+`Restart-Service -Name Wazuh`
+
+
+
+
 Hieronder vind je het `Sysmonconfig.xml`-configuratiebestand voor Sysmon:
 
 ```xml

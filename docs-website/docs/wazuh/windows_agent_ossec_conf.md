@@ -1,5 +1,12 @@
 # Windows Agent ossec.conf
 
+De standaard installatie route volgt het volgende `PATH` voor de `ossec`-configuratie: `C:\Program Files (x86)\ossec-agent`. De aanvullende, vereiste configuratie is nodig voor de usecases beschreven in hoofdstuk 4 uit het Technisch Ontwerp en te vinden in de bijlage, genaamd configuratiebestand Windows `ossec.conf`: 
+
+Herstart de agent op Windows na elke aanpassing op het ossec.conf-bestand met het volgende commando: 
+ `Restart-Service -Name Wazuh`
+
+
+
 Hieronder vind je het `ossec.conf`-configuratiebestand voor de Wazuh Windows agent:
 
 ```xml

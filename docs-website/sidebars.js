@@ -54,6 +54,7 @@ const sidebars = {
         'wazuh/dashboard',
         'wazuh/deploy_windows_agent',
         'wazuh/windows_agent_ossec_conf',
+        'wazuh/sysmonconfig',
       ],
     },
   ],
