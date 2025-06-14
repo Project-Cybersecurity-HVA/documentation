@@ -74,7 +74,7 @@ Nu zie je dat er een high alert is op de wazuh dashboard:
 
 ## Usecase Detectie van credential attacks op Windows
 
-Om nu de usecase te testen kan je een van de volgende commando’s op de powershell van de Windows systeem uitvoeren: 
+Om nu de usecase te testen kan je een van de volgende commando's op de powershell van de Windows systeem uitvoeren: 
 
 ```powershell
 rundll32.exe C:\Windows\System32\comsvcs.dll, MiniDump 624 C:\temp\lsass.dmp full 
@@ -98,9 +98,7 @@ Set-Content "$env:USERPROFILE\Desktop\eicar.com" 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EI
 
 **Wazuh Alert:**
 
-![Wazuh alert malware](/img/usecases/wazuh_alert_ongewenste_software.png)
-
-
+![Wazuh alert Detectie van Malware](/img/usecases/wazuh_alert_ongewenste_software.png)
 
 ## Usecase Uitschakelen van Windows Defender
 

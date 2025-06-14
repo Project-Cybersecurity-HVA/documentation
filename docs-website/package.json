@@ -7,7 +7,7 @@
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy",
+    "deploy": "set USE_SSH=true && docusaurus deploy",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
@@ -26,8 +26,9 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.8.1",
     "@docusaurus/types": "3.8.1",
-    "puppeteer": "^22.0.0",
-    "pdf-lib": "^1.17.1"
+    "cross-env": "^7.0.3",
+    "pdf-lib": "^1.17.1",
+    "puppeteer": "^22.0.0"
   },
   "browserslist": {
     "production": [
