@@ -95,6 +95,7 @@ Om nu de usecase te testen voer het volgende commando op de powershell van de Wi
 ```
 Set-Content "$env:USERPROFILE\Desktop\eicar.com" 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*' 
 ```
+Of download via [https://www.eicar.org/download-anti-malware-testfile/](https://www.eicar.org/download-anti-malware-testfile/)
 
 **Wazuh Alert:**
 

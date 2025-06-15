@@ -14,6 +14,12 @@ function getAllMarkdownFiles(dir, fileList = []) {
     if (stat.isDirectory()) {
       getAllMarkdownFiles(filePath, fileList);
     } else if (file.endsWith('.md')) {
+      // Skip sysmonconfig.md as it's too large
+      if (file === 'sysmonconfig.md') {
+        console.log('Skipping sysmonconfig.md as it is too large');
+        return;
+      }
+      
       // Convert file path to URL path
       const relativePath = path.relative(path.join(__dirname, '../docs'), filePath);
       const urlPath = '/documentation/docs/' + relativePath.replace(/\\/g, '/').replace('.md', '');
@@ -26,15 +32,20 @@ function getAllMarkdownFiles(dir, fileList = []) {
 
 async function waitForPageLoad(page) {
   try {
+    console.log('Waiting for content to load...');
+    
     // Wait for either the article or main content to be present
     await Promise.race([
-      page.waitForSelector('article', { timeout: 10000 }),
-      page.waitForSelector('main', { timeout: 10000 })
+      page.waitForSelector('article', { timeout: 120000 }), // 2 minutes
+      page.waitForSelector('main', { timeout: 120000 })
     ]);
+    
+    console.log('Content loaded, waiting for images...');
     
     // Wait for all images to load
     await page.evaluate(async () => {
       const selectors = Array.from(document.getElementsByTagName('img'));
+      console.log(`Found ${selectors.length} images to load`);
       await Promise.all(selectors.map(img => {
         if (img.complete) return;
         return new Promise((resolve, reject) => {
@@ -45,7 +56,8 @@ async function waitForPageLoad(page) {
     });
 
     // Additional wait to ensure content is rendered
-    await page.waitForTimeout(2000);
+    console.log('Waiting additional time for rendering...');
+    await page.waitForTimeout(10000); // 10 seconds
   } catch (error) {
     console.warn('Warning: Timeout waiting for content, proceeding anyway...');
   }
@@ -76,7 +88,15 @@ async function safeWriteFile(filePath, data, maxRetries = 5) {
 async function generatePDF() {
   const browser = await puppeteer.launch({
     headless: 'new',
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--disable-web-security',
+      '--disable-features=IsolateOrigins,site-per-process',
+      '--js-flags="--max-old-space-size=4096"'
+    ]
   });
 
   try {
@@ -113,15 +133,19 @@ async function generatePDF() {
         const fullUrl = `http://localhost:3000${pageUrl}`;
         console.log(`Navigating to: ${fullUrl}`);
         
+        // Set longer timeout for navigation
+        await page.setDefaultNavigationTimeout(300000); // 5 minutes
+        
         await page.goto(fullUrl, {
           waitUntil: 'networkidle0',
-          timeout: 60000 // 60 second timeout
+          timeout: 300000 // 5 minutes
         });
 
         // Wait for page content and images
         await waitForPageLoad(page);
 
         // Generate PDF for this page
+        console.log('Generating PDF for page...');
         const pdfBuffer = await page.pdf({
           format: 'A4',
           printBackground: true,
@@ -148,6 +172,7 @@ async function generatePDF() {
     }
 
     // Combine PDFs
+    console.log('Combining PDFs...');
     const mergedPdf = await PDFDocument.create();
 
     for (const pdfBuffer of pdfBuffers) {
@@ -157,6 +182,7 @@ async function generatePDF() {
     }
 
     // Save the merged PDF with retry logic
+    console.log('Saving final PDF...');
     const mergedPdfFile = await mergedPdf.save();
     const outputPath = path.join(__dirname, '../static/documentation.pdf');
     

@@ -220,30 +220,3 @@ Zorg dat de agent met de manager kan communiceren door deze regels in Windows De
   * Verwijder de agent, verwijder de map `C:\Program Files\Wazuh`, en installeer opnieuw met het juiste adres.
 
 
-
-## 7. Veelgestelde vragen (FAQ)
-
-1. **"Kan ik in plaats van `localhost` ook mijn LAN-IP invullen?"**
-   Ja, als de Wazuh-manager in Docker via dat LAN-IP bereikbaar is (bijv. `192.168.1.10:1515`), kun je dit IP opgeven tijdens de installatie. Zorg dat de Docker-poortbinding juist is en dat de firewall dit LAN-verkeer toestaat.
-
-2. **"Hoe geef ik meerdere groepen op?"**
-   Tijdens stille installatie (MSI) kun je meerdere groepen comma-gescheiden opgeven:
-
-   ```powershell
-   msiexec.exe /i "wazuh-agent-4.12.0-1.msi" /qn `
-     WAZUH_MANAGER="127.0.0.1" `
-     WAZUH_AGENT_GROUPS="GroupA,GroupB"
-   ```
-
-3. **"Waar vind ik de agentconfiguratie na installatie?"**
-   De configuratiebestanden staan in:
-
-   ```
-   C:\Program Files\Wazuh\etc\ossec.conf
-   ```
-
-   Pas hierin instellingen aan (bijvoorbeeld logging-levels), en herstart dan de dienst:
-
-   ```powershell
-   Restart-Service wazuh-agent
-   ``` 

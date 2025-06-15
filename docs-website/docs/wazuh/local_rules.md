@@ -3,132 +3,126 @@
 Hieronder vind je de lokale regels voor Wazuh, zoals gebruikt in deze implementatie:
 
 ```xml
-<group name="local">
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
 
-  <!-- SSHD brute-force vanaf bekend IP (voorbeeld UNIX) -->
-  <rule id="100001" level="5">
-    <if_sid>5716</if_sid>
-    <srcip>1.1.1.1</srcip>
-    <description>sshd: authentication failed from IP 1.1.1.1.</description>
-    <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5</group>
-  </rule>
+  <!-- Brute force detection -->
+  <group name="windows_brute_force">
+    <rule id="100100" level="10" frequency="3" timeframe="120">
+      <if_matched_sid>60122</if_matched_sid>
+      <description>Possible Windows Brute Force: 3 failed logons in 2 minutes</description>
+    </rule>
+  </group>
 
-</group>
+  <!-- Sysmon Event ID 7 detection -->
+  <group name="sysmon_eid7_detections">
+    <rule id="92154" level="4">
+      <if_group>sysmon_event7</if_group>
+      <field name="win.eventdata.imageLoaded" type="pcre2">(?i)taskschd\.dll</field>
+      <options>no_full_log</options>
+      <description>Process loaded taskschd.dll module. May be used to create delayed malware execution</description>
+      <mitre>
+        <id>T1053.005</id>
+      </mitre>
+    </rule>
+  </group>
 
-<group name="rdp">
+  <!-- Sysmon Event ID 11 detection -->
+  <group name="sysmon_eid11_detections">
+    <rule id="92213" level="15">
+      <if_group>sysmon_event_11</if_group>
+      <field name="win.eventdata.targetFilename" type="pcre2">(?i)[c-z]:\\Users\\.+\\AppData\\Local\\Temp\\.+\.(exe|com|dll|vbs|js|bat|cmd|pif|wsh|ps1|msi|vbe)</field>
+      <options>no_full_log</options>
+      <description>Executable file dropped in folder commonly used by malware</description>
+      <mitre>
+        <id>T1105</id>
+      </mitre>
+    </rule>
+  </group>
 
-  <!-- Herhaalde RDP-aanmeldingen -->
-  <rule id="100002" level="10" frequency="3" timeframe="120">
-    <if_matched_sid>60122</if_matched_sid>
-    <description>RDP Attack Detected</description>
-  </rule>
+  <!-- Credential Dumping and Credential Access -->
+  <group name="windows_credential_attacks">
+    <rule id="100010" level="10">
+      <if_sid>61609</if_sid>
+      <field name="win.eventdata.image" type="pcre2">(?i)\\rundll32.exe</field>
+      <field name="win.eventdata.imageLoaded" type="pcre2">(?i)[c-z]:\\Windows\\System32\\comsvcs\.dll</field>
+      <description>Possible adversary activity - LSASS memory dump via rundll32 and comsvcs.dll</description>
+      <mitre><id>T1003.001</id></mitre>
+    </rule>
 
-</group>
+    <rule id="100011" level="10">
+      <if_sid>61613</if_sid>
+      <field name="win.eventData.targetFilename" type="pcre2">(?i)\\[^\\]*\.dmp$</field>
+      <field name="win.eventData.image" negate="yes" type="pcre2">(?i)\\lsass.*</field>
+      <description>Possible LSASS memory dump - .dmp file created not by lsass</description>
+      <mitre><id>T1003.001</id></mitre>
+    </rule>
 
-<group name="apache">
+    <rule id="100012" level="10">
+      <if_sid>61603</if_sid>
+      <field name="win.eventData.Image" type="pcre2">(?i)\\rundll32.exe</field>
+      <field name="win.eventData.commandLine" type="pcre2">keymgr.dll,KRShowKeyMgr</field>
+      <description>Credential Manager access via rundll32</description>
+      <mitre><id>T1003</id></mitre>
+    </rule>
 
-  <!-- Apache: verboden bestandspad geprobeerd -->
-  <rule id="100003" level="5">
-    <if_sid>30101</if_sid>
-    <match>denied by server configuration</match>
-    <description>Apache: Attempt to access forbidden file or directory.</description>
-    <group>access_denied</group>
-  </rule>
+    <rule id="100013" level="10">
+      <if_sid>92052</if_sid>
+      <field name="win.eventData.image" type="pcre2">(?i)\\vaultcmd.exe</field>
+      <field name="win.eventData.commandLine" type="pcre2">list</field>
+      <description>Credential listing attempt via vaultcmd</description>
+      <mitre><id>T1003</id></mitre>
+    </rule>
+  </group>
 
-</group>
+  <!-- BloodHound/SharpHound detection -->
+  <group name="sharphound">
+    <rule id="111151" level="7">
+      <if_sid>61603</if_sid>
+      <field name="win.eventdata.company" type="pcre2">^SpecterOps$</field>
+      <description>SharpHound binary executed</description>
+      <mitre><id>T1033</id></mitre>
+    </rule>
 
-<group name="windows,windows_security">
+    <rule id="111152" level="12">
+      <if_sid>61603</if_sid>
+      <field name="win.eventdata.parentImage" type="pcre2">(?i)[c-z]:\\Windows\\System32\\.+\\(powershell|cmd)\.exe</field>
+      <field name="win.eventdata.commandLine" type="pcre2">(?i)((--CollectionMethods\s)((.+){1,12})|(\s(--Loop)))</field>
+      <description>SharpHound CollectionMethods flag detected</description>
+      <mitre><id>T1059.00</id><id>T1033</id></mitre>
+    </rule>
 
-  <!-- Password reset attempt (Event ID 4724) -->
-  <rule id="100004" level="8">
-    <if_sid>60103</if_sid>
-    <field name="win.system.eventID">^4724$</field>
-    <description>Attempt to reset password for: $(win.eventdata.TargetUserName).</description>
-    <options>no_full_log</options>
-  </rule>
+    <rule id="111153" level="12">
+      <if_sid>61603</if_sid>
+      <field name="win.eventdata.parentImage" type="pcre2">(?i)[c-z]:\\Windows\\System32\\.+\\(powershell|cmd)\.exe</field>
+      <field name="win.eventdata.commandLine" type="pcre2">(?i)((invoke-bloodhound\s)|(get-bloodHounddata\s))</field>
+      <description>SharpHound PowerShell cmdlet detected</description>
+      <mitre><id>T1059.00</id><id>T1033</id></mitre>
+    </rule>
+  </group>
 
-  <!-- Aanmaken van nieuw gebruikersaccount (Event ID 4720) -->
-  <rule id="100005" level="8">
-    <field name="win.system.eventID">4720</field>
-    <description>New user account created: $(win.eventdata.TargetUserName).</description>
-  </rule>
+  <!-- Custom rules -->
+  <group name="custom_rules">
+    <rule id="100111" level="5">
+      <if_sid>60106</if_sid>
+      <time>6 pm - 8:30 am</time>
+      <description>Windows Logon Success outside office hours</description>
+      <options>no_full_log</options>
+    </rule>
 
-  <!-- Auditlog gewist (Event ID 1102) -->
-  <rule id="100006" level="10">
-    <field name="win.system.eventID">1102</field>
-    <description>The audit log was cleared. Mogelijke poging om sporen te wissen.</description>
-  </rule>
+    <rule id="100112" level="8">
+      <if_sid>92651</if_sid>
+      <field name="win.eventdata.ipAddress" type="pcre2">^192\.168\.56\.([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-4])$</field>
+      <description>Remote Logon from unknown network</description>
+    </rule>
 
-</group>
+    <rule id="100113" level="5">
+      <if_sid>60009</if_sid>
+      <field name="win.eventdata.contextInfo" type="pcre2">\bGet-ADGroupMember\b *</field>
+      <description>Get-ADGroupMember PowerShell executed</description>
+    </rule>
+  </group>
 
-<group name="windows,powershell">
+</rules>
 
-  <!-- Start van PowerShell (Event ID 4688) -->
-  <rule id="100007" level="10">
-    <field name="win.system.eventID">4688</field>
-    <field name="win.eventdata.NewProcessName">(?i).*\\powershell.exe$|.*\\pwsh.exe$</field>
-    <description>PowerShell-process gestart via Event ID 4688</description>
-  </rule>
-
-</group>
-
-<group name="windows,registry">
-
-  <!-- Wijziging aan Run registry key -->
-  <rule id="100008" level="10">
-    <if_sid>598</if_sid>
-    <description>Nieuwe waarde toegevoegd aan Windows Run registry key. Mogelijke persistente aanval.</description>
-    <mitre>
-      <id>T1547.001</id>
-    </mitre>
-  </rule>
-
-</group>
-
-<group name="Windows,attack,">
-  <!-- Detecting an LSASS memory dumping attack using Rundll32.exe Minidump Function or Comsvcs.dll Exploitation -->
-  <rule id="100010" level="10">
-    <if_sid>61609</if_sid>
-    <field name="win.eventdata.image" type="pcre2">(?i)\\\\rundll32.exe</field>
-    <field name="win.eventdata.imageLoaded" type="pcre2">(?i)[c-z]:\\\\Windows\\\\System32\\\\comsvcs\.dll</field>
-    <description>Possible adversary activity - LSASS memory dump: $(win.eventdata.imageLoaded) loaded by using $(win.eventData.image) on $(win.system.computer).</description>
-    <mitre>
-      <id>T1003.001</id>
-    </mitre>
-  </rule>
-
-  <!-- Detecting an LSASS memory dumping attack using specialized tools -->
-  <rule id="100011" level="10">
-    <if_sid>61613</if_sid>
-    <field name="win.eventData.targetFilename" type="pcre2">(?i)\\\\[^\\]*\.dmp$</field>
-    <field name="win.eventData.image" negate="yes" type="pcre2">(?i)\\\\lsass.*</field>
-    <description>Possible adversary activity - LSASS memory dump: $(win.eventdata.image) created a new file on $(win.system.computer) endpoint.</description>
-    <mitre>
-      <id>T1003.001</id>
-    </mitre>
-  </rule>
-
-  <!-- Detecting a Windows Credential Manager exploitation attack -->
-  <rule id="100012" level="10">
-    <if_sid>61603</if_sid>
-    <field name="win.eventData.Image" type="pcre2">(?i)\\\\rundll32.exe</field>
-    <field name="win.eventData.commandLine" type="pcre2">keymgr.dll,KRShowKeyMgr</field>
-    <description>Possible adversary activity - Credential Manager Access via $(win.eventData.Image) on $(win.system.computer) endpoint.</description>
-    <mitre>
-      <id>T1003</id>
-    </mitre>
-  </rule>
-
-  <!--  Detecting a Windows Credential Manager exploitation attack by VaultCmd process enumeration -->
-  <rule id="100013" level="10">
-    <if_sid>92052</if_sid>
-    <field name="win.eventData.image" type="pcre2">(?i)\\\\vaultcmd.exe</field>
-    <field name="win.eventData.commandLine" type="pcre2">list</field>
-    <description>Possible adversary activity - Attempt to list credentials via $(win.eventData.Image) on $(win.system.computer) endpoint.</description>
-    <mitre>
-      <id>T1003</id>
-    </mitre>
-  </rule>
-
-</group>
 ``` 

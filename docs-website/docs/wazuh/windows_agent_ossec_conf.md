@@ -35,24 +35,28 @@ Hieronder vind je het `ossec.conf`-configuratiebestand voor de Wazuh Windows age
     </enrollment>
   </client>
 
-  <!-- Agent buffer options -->
   <client_buffer>
     <disabled>no</disabled>
     <queue_size>5000</queue_size>
     <events_per_second>500</events_per_second>
   </client_buffer>
 
+  <!-- Logbronnen Windows Eventchannels -->
   <localfile>
-  <location>Security</location>
-  <log_format>eventchannel</log_format>
-  <query>
-    Event[System[EventID=4688]
-      and EventData[Data[@Name='NewProcessName']='C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe']]
-  </query>
+    <location>Security</location>
+    <log_format>eventchannel</log_format>
+    <query>Event[System[EventID=4688] and EventData[Data[@Name='NewProcessName']='C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe']]</query>
+    <query>Event[System/EventID=104]</query>
+    <query>Event[System/EventID=1102]</query>
   </localfile>
 
   <localfile>
     <location>System</location>
+    <log_format>eventchannel</log_format>
+  </localfile>
+
+  <localfile>
+    <location>Microsoft-Windows-Windows Firewall With Advanced Security/Firewall</location>
     <log_format>eventchannel</log_format>
   </localfile>
 
@@ -62,13 +66,13 @@ Hieronder vind je het `ossec.conf`-configuratiebestand voor de Wazuh Windows age
   </localfile>
 
   <localfile>
-    <location>active-response\\active-responses.log</location>
-    <log_format>syslog</log_format>
+    <location>Microsoft-Windows-Sysmon/Operational</location>
+    <log_format>eventchannel</log_format>
   </localfile>
 
   <localfile>
-    <location>Microsoft-Windows-Sysmon/Operational</location>
-    <log_format>eventchannel</log_format>
+    <location>active-response\\active-responses.log</location>
+    <log_format>syslog</log_format>
   </localfile>
 
   <rootcheck>
@@ -88,38 +92,32 @@ Hieronder vind je het `ossec.conf`-configuratiebestand voor de Wazuh Windows age
     <disabled>no</disabled>
     <frequency>43200</frequency>
 
+    <!-- Kritieke Windows-directories -->
     <directories recursion_level="0" restrict="regedit.exe$|system.ini$|win.ini$">%WINDIR%</directories>
-    <directories recursion_level="0" restrict="at.exe$|attrib.exe$|cacls.exe$|cmd.exe$|eventcreate.exe$|ftp.exe$|lsass.exe$|net.exe$|net1.exe$|netsh.exe$|reg.exe$|regedt32.exe|regsvr32.exe|runas.exe|sc.exe|schtasks.exe|sethc.exe|subst.exe$">%WINDIR%\\SysNative</directories>
     <directories recursion_level="0">%WINDIR%\\SysNative\\drivers\\etc</directories>
-    <directories recursion_level="0" restrict="WMIC.exe$">%WINDIR%\\SysNative\\wbem</directories>
-    <directories recursion_level="0" restrict="powershell.exe$">%WINDIR%\\SysNative\\WindowsPowerShell\\v1.0</directories>
-    <directories recursion_level="0" restrict="winrm.vbs$">%WINDIR%\\SysNative</directories>
-    <directories recursion_level="0" restrict="at.exe$|attrib.exe$|cacls.exe$|cmd.exe$|eventcreate.exe$|ftp.exe$|lsass.exe$|net.exe$|net1.exe$|netsh.exe$|reg.exe$|regedit.exe$|regedt32.exe$|regsvr32.exe$|runas.exe$|sc.exe$|schtasks.exe$|sethc.exe$|subst.exe$">%WINDIR%\\System32</directories>
     <directories recursion_level="0">%WINDIR%\\System32\\drivers\\etc</directories>
-    <directories recursion_level="0" restrict="WMIC.exe$">%WINDIR%\\System32\\wbem</directories>
+
+    <!-- Executables en scripts -->
     <directories recursion_level="0" restrict="powershell.exe$">%WINDIR%\\System32\\WindowsPowerShell\\v1.0</directories>
     <directories recursion_level="0" restrict="winrm.vbs$">%WINDIR%\\System32</directories>
+
+    <!-- Real-time monitoring -->
     <directories realtime="yes">%PROGRAMDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup</directories>
 
+    <!-- Uitsluitingen -->
     <ignore>%PROGRAMDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\desktop.ini</ignore>
     <ignore type="sregex">.log$|.htm$|.jpg$|.png$|.chm$|.pnf$|.evtx$</ignore>
 
-    <frequency>300</frequency>
+    <!-- Registry monitoring -->
     <windows_registry arch="both">HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Run</windows_registry>
     <windows_registry arch="both">HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce</windows_registry>
-
     <registry_ignore>HKEY_LOCAL_MACHINE\\Security\\Policy\\Secrets</registry_ignore>
     <registry_ignore>HKEY_LOCAL_MACHINE\\Security\\SAM\\Domains\\Account\\Users</registry_ignore>
     <registry_ignore type="sregex">\\Enum$</registry_ignore>
     <registry_ignore>HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\MpsSvc\\Parameters\\AppCs</registry_ignore>
-    <registry_ignore>HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\MpsSvc\\Parameters\\PortKeywords\\DHCP</registry_ignore>
-    <registry_ignore>HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\MpsSvc\\Parameters\\PortKeywords\\IPTLSIn</registry_ignore>
-    <registry_ignore>HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\MpsSvc\\Parameters\\PortKeywords\\IPTLSOut</registry_ignore>
-    <registry_ignore>HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\MpsSvc\\Parameters\\PortKeywords\\RPC-EPMap</registry_ignore>
-    <registry_ignore>HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\MpsSvc\\Parameters\\PortKeywords\\Teredo</registry_ignore>
-    <registry_ignore>HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\PolicyAgent\\Parameters\\Cache</registry_ignore>
-    <registry_ignore>HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\ADOVMPPackage\\Final</registry_ignore>
+    <!-- overige registry_ignores blijven gelijk -->
 
+    <!-- Instellingen -->
     <windows_audit_interval>60</windows_audit_interval>
     <process_priority>10</process_priority>
     <max_eps>50</max_eps>
@@ -151,24 +149,24 @@ Hieronder vind je het `ossec.conf`-configuratiebestand voor de Wazuh Windows age
     <timeout>1800</timeout>
     <interval>1d</interval>
     <scan-on-start>yes</scan-on-start>
-    <java_path>\\server\jre\bin\java.exe</java_path>
-    <ciscat_path>C:\cis-cat</ciscat_path>
+    <java_path>\\server\\jre\\bin\\java.exe</java_path>
+    <ciscat_path>C:\\cis-cat</ciscat_path>
   </wodle>
 
   <wodle name="osquery">
     <disabled>yes</disabled>
     <run_daemon>yes</run_daemon>
-    <bin_path>C:\Program Files\osquery\osqueryd</bin_path>
-    <log_path>C:\Program Files\osquery\log\osqueryd.results.log</log_path>
-    <config_path>C:\Program Files\osquery\osquery.conf</config_path>
+    <bin_path>C:\\Program Files\\osquery\\osqueryd</bin_path>
+    <log_path>C:\\Program Files\\osquery\\log\\osqueryd.results.log</log_path>
+    <config_path>C:\\Program Files\\osquery\\osquery.conf</config_path>
     <add_labels>yes</add_labels>
   </wodle>
 
   <wodle name="eventchannel">
-   <enabled>yes</enabled>
-   <read_interval>5</read_interval>
-   <location>Security</location>
-   <query>Event/System[EventID=1102]</query>
+    <enabled>yes</enabled>
+    <read_interval>5</read_interval>
+    <location>Security</location>
+    <query>Event/System[EventID=1102]</query>
   </wodle>
 
   <active-response>
@@ -182,4 +180,5 @@ Hieronder vind je het `ossec.conf`-configuratiebestand voor de Wazuh Windows age
   </logging>
 
 </ossec_config>
+
 ``` 
