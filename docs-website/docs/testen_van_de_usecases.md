@@ -103,18 +103,15 @@ Of download via [https://www.eicar.org/download-anti-malware-testfile/](https://
 
 ## Usecase Uitschakelen van Windows Defender
 
-Voer het volgende commando uit in Powershell om een `.bat`-bestand aan te maken in de `TEMP`-folder: 
+- Klik op de Windows knop en zoek naar Windows Security 
+- Ga vervolgens naar Virus & Threat Protection 
+- Klik op manage settings onder het kopje Virus & threat protection settings 
+- Schakel real-time protection uit 
 
-`echo "echo hello" > "$env:TEMP\Hacked_me.bat" `
-
-Vervolgens genereert Sysmon een melding in de eventviewer met ID 11: 
-
-**Windows Event_viewer:**
+**Wazuh Event_viewer:**
 
 ![Wazuh alert uitschakelen Windows Defender](/img/usecases/wazuh_alert_uitschakelen_windows_defender.png)
 
-**Wazuh Event_viewer:**
-![Wazuh alert uitschakelen Windows Defender](/img/usecases/wazuh_alert_uitschakelen_windows_defender_2.png)
 
 
 ## Usecase Misbruik van de Windows Task Scheduler 
