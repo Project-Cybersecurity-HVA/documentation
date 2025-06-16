@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.8.1">
 <title data-rh="true">Testen van de Usecases | Groep 4</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://project-cybersecurity-hva.github.io/documentation/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://project-cybersecurity-hva.github.io/documentation/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://project-cybersecurity-hva.github.io/documentation/docs/testen_van_de_usecases/"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Testen van de Usecases | Groep 4"><meta data-rh="true" name="description" content="_NOTE:_ De logging moet via audit policy toegestaan zijn voor verschillende Windows usecases, zoals beschreven in het Functioneel ontwerp"><meta data-rh="true" property="og:description" content="_NOTE:_ De logging moet via audit policy toegestaan zijn voor verschillende Windows usecases, zoals beschreven in het Functioneel ontwerp"><link data-rh="true" rel="icon" href="/documentation/img/wazuh_logo.png"><link data-rh="true" rel="canonical" href="https://project-cybersecurity-hva.github.io/documentation/docs/testen_van_de_usecases/"><link data-rh="true" rel="alternate" href="https://project-cybersecurity-hva.github.io/documentation/docs/testen_van_de_usecases/" hreflang="en"><link data-rh="true" rel="alternate" href="https://project-cybersecurity-hva.github.io/documentation/docs/testen_van_de_usecases/" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Testen van de Usecases","item":"https://project-cybersecurity-hva.github.io/documentation/docs/testen_van_de_usecases"}]}</script><link rel="stylesheet" href="/documentation/assets/css/styles.d46ce1ba.css">
-<script src="/documentation/assets/js/runtime~main.69af7ad9.js" defer="defer"></script>
+<script src="/documentation/assets/js/runtime~main.c263032f.js" defer="defer"></script>
 <script src="/documentation/assets/js/main.ffecaea5.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -64,13 +64,14 @@
 <p><strong>Wazuh Alert:</strong></p>
 <p><img decoding="async" loading="lazy" alt="Wazuh alert Detectie van Malware" src="/documentation/assets/images/wazuh_alert_ongewenste_software-ebf2d0f3b842c342cfd8040931ad043b.png" width="877" height="726" class="img_ev3q"></p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="usecase-uitschakelen-van-windows-defender">Usecase Uitschakelen van Windows Defender<a href="#usecase-uitschakelen-van-windows-defender" class="hash-link" aria-label="Direct link to Usecase Uitschakelen van Windows Defender" title="Direct link to Usecase Uitschakelen van Windows Defender">​</a></h2>
-<p>Voer het volgende commando uit in Powershell om een <code>.bat</code>-bestand aan te maken in de <code>TEMP</code>-folder:</p>
-<p><code>echo &quot;echo hello&quot; &gt; &quot;$env:TEMP\Hacked_me.bat&quot; </code></p>
-<p>Vervolgens genereert Sysmon een melding in de eventviewer met ID 11:</p>
-<p><strong>Windows Event_viewer:</strong></p>
-<p><img decoding="async" loading="lazy" alt="Wazuh alert uitschakelen Windows Defender" src="/documentation/assets/images/wazuh_alert_uitschakelen_windows_defender-7498778de107198dfd79f82142e26ddb.png" width="904" height="436" class="img_ev3q"></p>
-<p><strong>Wazuh Event_viewer:</strong>
-<img decoding="async" loading="lazy" alt="Wazuh alert uitschakelen Windows Defender" src="/documentation/assets/images/wazuh_alert_uitschakelen_windows_defender_2-6f9019eed6130d0390009cd22cca19cb.png" width="906" height="447" class="img_ev3q"></p>
+<ul>
+<li>Klik op de Windows knop en zoek naar Windows Security</li>
+<li>Ga vervolgens naar Virus &amp; Threat Protection</li>
+<li>Klik op manage settings onder het kopje Virus &amp; threat protection settings</li>
+<li>Schakel real-time protection uit</li>
+</ul>
+<p><strong>Wazuh Event_viewer:</strong></p>
+<p><img decoding="async" loading="lazy" alt="Wazuh alert uitschakelen Windows Defender" src="/documentation/assets/images/wazuh_alert_uitschakelen_windows_defender-d3cd731f201add370487478f095482dc.png" width="895" height="441" class="img_ev3q"></p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="usecase-misbruik-van-de-windows-task-scheduler">Usecase Misbruik van de Windows Task Scheduler<a href="#usecase-misbruik-van-de-windows-task-scheduler" class="hash-link" aria-label="Direct link to Usecase Misbruik van de Windows Task Scheduler" title="Direct link to Usecase Misbruik van de Windows Task Scheduler">​</a></h2>
 <p>Voer het volgende commando uit in Powershell om het taskschd.dll module te laden:</p>
 <p><code>Start-Process schtasks.exe </code></p>
